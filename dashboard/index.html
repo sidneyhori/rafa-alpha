@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Velocity Motors | Sales Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="nav-header">
+        <div class="nav-left">
+            <div class="logo">
+                <span class="logo-icon">V</span>
+                <span class="logo-text">VELOCITY MOTORS</span>
+            </div>
+        </div>
+        <div class="nav-center">
+            <div class="view-toggle">
+                <button class="toggle-btn active" data-view="vp">VP Dashboard</button>
+                <button class="toggle-btn" data-view="regional">Regional Dashboard</button>
+            </div>
+        </div>
+        <div class="nav-right">
+            <div class="date-selector">
+                <select id="dateRange">
+                    <option value="ytd">Year to Date</option>
+                    <option value="q4">Q4 2024</option>
+                    <option value="q3">Q3 2024</option>
+                    <option value="q2">Q2 2024</option>
+                    <option value="q1">Q1 2024</option>
+                </select>
+            </div>
+            <div class="user-profile">
+                <div class="user-avatar">JD</div>
+                <span class="user-name">John Doe</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dashboard Content -->
+    <main class="dashboard-main">
+        <!-- KPIs Section -->
+        <section class="kpi-section">
+            <h2 class="section-title">Key Performance Indicators</h2>
+
+            <!-- VP KPIs -->
+            <div class="kpi-grid vp-kpis">
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Total Revenue (YTD)</span>
+                        <span class="kpi-value" id="kpi-revenue">$0</span>
+                        <span class="kpi-change positive" id="kpi-revenue-change">+0%</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Total Units Sold</span>
+                        <span class="kpi-value" id="kpi-units">0</span>
+                        <span class="kpi-change positive" id="kpi-units-change">+0%</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                            <polyline points="17 6 23 6 23 12"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">YoY Growth</span>
+                        <span class="kpi-value" id="kpi-growth">0%</span>
+                        <span class="kpi-change positive" id="kpi-growth-change">+0%</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Avg Selling Price</span>
+                        <span class="kpi-value" id="kpi-asp">$0</span>
+                        <span class="kpi-change positive" id="kpi-asp-change">+0%</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 20V10M12 20V4M6 20v-6"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Gross Margin</span>
+                        <span class="kpi-value" id="kpi-margin">0%</span>
+                        <span class="kpi-change positive" id="kpi-margin-change">+0%</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Market Share</span>
+                        <span class="kpi-value" id="kpi-share">0%</span>
+                        <span class="kpi-change positive" id="kpi-share-change">+0%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Regional KPIs (Hidden by default) -->
+            <div class="kpi-grid regional-kpis hidden">
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Regional Revenue</span>
+                        <span class="kpi-value" id="kpi-reg-revenue">$0</span>
+                        <span class="kpi-change positive" id="kpi-reg-revenue-change">+0%</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Units Sold (Region)</span>
+                        <span class="kpi-value" id="kpi-reg-units">0</span>
+                        <span class="kpi-change positive" id="kpi-reg-units-change">+0%</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                            <polyline points="22 4 12 14.01 9 11.01"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Target vs Actual</span>
+                        <span class="kpi-value" id="kpi-reg-target">0%</span>
+                        <span class="kpi-change positive" id="kpi-reg-target-change">On Track</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Top Dealer</span>
+                        <span class="kpi-value" id="kpi-reg-dealer">-</span>
+                        <span class="kpi-change positive" id="kpi-reg-dealer-change">$0</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Inventory Level</span>
+                        <span class="kpi-value" id="kpi-reg-inventory">0</span>
+                        <span class="kpi-change neutral" id="kpi-reg-inventory-change">units</span>
+                    </div>
+                </div>
+                <div class="kpi-card">
+                    <div class="kpi-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                        </svg>
+                    </div>
+                    <div class="kpi-content">
+                        <span class="kpi-label">Regional Rank</span>
+                        <span class="kpi-value" id="kpi-reg-rank">#0</span>
+                        <span class="kpi-change positive" id="kpi-reg-rank-change">of 5</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Map and Charts Section -->
+        <section class="visualization-section">
+            <div class="viz-grid">
+                <!-- USA Map -->
+                <div class="viz-card map-card">
+                    <div class="card-header">
+                        <h3>Regional Performance</h3>
+                        <div class="region-selector">
+                            <select id="regionSelect">
+                                <option value="all">All Regions</option>
+                                <option value="west">West</option>
+                                <option value="southwest">Southwest</option>
+                                <option value="midwest">Midwest</option>
+                                <option value="southeast">Southeast</option>
+                                <option value="northeast">Northeast</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="map-container" id="mapContainer">
+                        <!-- SVG Map will be inserted here -->
+                    </div>
+                    <div class="map-legend">
+                        <div class="legend-item">
+                            <span class="legend-color high"></span>
+                            <span>High Performance</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color medium"></span>
+                            <span>Medium Performance</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color low"></span>
+                            <span>Below Target</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sales Trend Chart -->
+                <div class="viz-card">
+                    <div class="card-header">
+                        <h3>Sales Trend</h3>
+                        <div class="chart-filter">
+                            <button class="filter-btn active" data-filter="revenue">Revenue</button>
+                            <button class="filter-btn" data-filter="units">Units</button>
+                        </div>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="salesTrendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="viz-grid secondary">
+                <!-- Model Breakdown -->
+                <div class="viz-card">
+                    <div class="card-header">
+                        <h3>Sales by Model</h3>
+                    </div>
+                    <div class="chart-container donut-container">
+                        <canvas id="modelChart"></canvas>
+                    </div>
+                    <div class="model-legend" id="modelLegend">
+                        <!-- Model legend items will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Regional Comparison -->
+                <div class="viz-card">
+                    <div class="card-header">
+                        <h3>Regional Comparison</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="regionalChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Dealer Leaderboard -->
+                <div class="viz-card leaderboard-card">
+                    <div class="card-header">
+                        <h3>Top Dealers</h3>
+                        <span class="view-all">View All</span>
+                    </div>
+                    <div class="leaderboard-container">
+                        <table class="leaderboard-table">
+                            <thead>
+                                <tr>
+                                    <th>Rank</th>
+                                    <th>Dealer</th>
+                                    <th>Region</th>
+                                    <th>Revenue</th>
+                                    <th>Units</th>
+                                </tr>
+                            </thead>
+                            <tbody id="leaderboardBody">
+                                <!-- Dealer rows will be inserted here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Car Models Section -->
+        <section class="models-section">
+            <h2 class="section-title">Vehicle Lineup Performance</h2>
+            <div class="models-grid">
+                <div class="model-card" data-model="apex">
+                    <div class="model-image apex">
+                        <div class="model-badge luxury">Luxury</div>
+                    </div>
+                    <div class="model-info">
+                        <h4>Model Apex</h4>
+                        <span class="model-price">$85,000</span>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="apex-units">0</span>
+                                <span class="stat-label">Units Sold</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="apex-revenue">$0</span>
+                                <span class="stat-label">Revenue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="model-card" data-model="venture">
+                    <div class="model-image venture">
+                        <div class="model-badge premium">Premium SUV</div>
+                    </div>
+                    <div class="model-info">
+                        <h4>Model Venture</h4>
+                        <span class="model-price">$75,000</span>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="venture-units">0</span>
+                                <span class="stat-label">Units Sold</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="venture-revenue">$0</span>
+                                <span class="stat-label">Revenue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="model-card" data-model="pulse">
+                    <div class="model-image pulse">
+                        <div class="model-badge midrange">Mid-Range</div>
+                    </div>
+                    <div class="model-info">
+                        <h4>Model Pulse</h4>
+                        <span class="model-price">$45,000</span>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="pulse-units">0</span>
+                                <span class="stat-label">Units Sold</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="pulse-revenue">$0</span>
+                                <span class="stat-label">Revenue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="model-card" data-model="terra">
+                    <div class="model-image terra">
+                        <div class="model-badge compact">Compact SUV</div>
+                    </div>
+                    <div class="model-info">
+                        <h4>Model Terra</h4>
+                        <span class="model-price">$52,000</span>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="terra-units">0</span>
+                                <span class="stat-label">Units Sold</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="terra-revenue">$0</span>
+                                <span class="stat-label">Revenue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="model-card" data-model="bolt">
+                    <div class="model-image bolt">
+                        <div class="model-badge sports">Sports</div>
+                    </div>
+                    <div class="model-info">
+                        <h4>Model Bolt</h4>
+                        <span class="model-price">$120,000</span>
+                        <div class="model-stats">
+                            <div class="stat">
+                                <span class="stat-value" id="bolt-units">0</span>
+                                <span class="stat-label">Units Sold</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-value" id="bolt-revenue">$0</span>
+                                <span class="stat-label">Revenue</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Chat Feature -->
+    <div class="chat-container" id="chatContainer">
+        <button class="chat-toggle" id="chatToggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            <span class="chat-badge hidden" id="chatBadge">1</span>
+        </button>
+        <div class="chat-panel hidden" id="chatPanel">
+            <div class="chat-header">
+                <div class="chat-title">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    <span>Sales Assistant</span>
+                </div>
+                <button class="chat-close" id="chatClose">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message bot">
+                    <div class="message-content">
+                        Hello! I'm your sales dashboard assistant. Ask me anything about sales performance, regional data, or our vehicle lineup. Try asking:
+                        <ul class="suggestions">
+                            <li data-query="What's our best selling model?">"What's our best selling model?"</li>
+                            <li data-query="How is the West region performing?">"How is the West region performing?"</li>
+                            <li data-query="Show me Q4 sales breakdown">"Show me Q4 sales breakdown"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Ask about sales data...">
+                <button class="chat-send" id="chatSend">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tooltip -->
+    <div class="tooltip hidden" id="tooltip"></div>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
