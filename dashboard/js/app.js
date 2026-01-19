@@ -7,12 +7,13 @@ const App = {
     currentView: 'vp',
     currentRegion: 'all',
     dateRange: 'ytd',
+    theme: 'dark',
 
     // Initialize the application
     init: () => {
         console.log('Velocity Motors Dashboard - Initializing...');
 
-        // Load saved preferences
+        // Load saved preferences (including theme - must be first)
         App.loadPreferences();
 
         // Initialize components
@@ -42,6 +43,7 @@ const App = {
     loadPreferences: () => {
         const savedView = localStorage.getItem('vm-view');
         const savedDateRange = localStorage.getItem('vm-dateRange');
+        const savedTheme = localStorage.getItem('vm-theme');
 
         if (savedView) {
             App.currentView = savedView;
@@ -52,12 +54,37 @@ const App = {
             const dateSelect = document.getElementById('dateRange');
             if (dateSelect) dateSelect.value = savedDateRange;
         }
+
+        // Apply saved theme or check system preference
+        if (savedTheme) {
+            App.theme = savedTheme;
+        } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            App.theme = 'light';
+        }
+        App.applyTheme(App.theme);
     },
 
     // Save user preferences to localStorage
     savePreferences: () => {
         localStorage.setItem('vm-view', App.currentView);
         localStorage.setItem('vm-dateRange', App.dateRange);
+        localStorage.setItem('vm-theme', App.theme);
+    },
+
+    // Apply theme to document
+    applyTheme: (theme) => {
+        document.documentElement.setAttribute('data-theme', theme);
+        App.theme = theme;
+    },
+
+    // Toggle between light and dark theme
+    toggleTheme: () => {
+        const newTheme = App.theme === 'dark' ? 'light' : 'dark';
+        App.applyTheme(newTheme);
+        App.savePreferences();
+
+        // Recreate charts with new theme colors
+        Charts.updateDateRange(App.dateRange);
     },
 
     // Bind event listeners
@@ -77,6 +104,12 @@ const App = {
             dateSelect.addEventListener('change', (e) => {
                 App.setDateRange(e.target.value);
             });
+        }
+
+        // Theme toggle
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+            themeToggle.addEventListener('click', App.toggleTheme);
         }
 
         // Chart filter buttons

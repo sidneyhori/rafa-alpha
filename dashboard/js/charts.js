@@ -7,7 +7,48 @@ const Charts = {
     instances: {},
     currentMetric: 'revenue',
 
-    // Chart.js default configuration
+    // Get theme-aware colors from CSS variables
+    getThemeColors: () => {
+        const style = getComputedStyle(document.documentElement);
+        const isLight = document.documentElement.getAttribute('data-theme') === 'light';
+
+        return {
+            gridColor: isLight ? 'rgba(0, 0, 0, 0.08)' : 'rgba(255, 255, 255, 0.05)',
+            tickColor: style.getPropertyValue('--text-tertiary').trim() || '#666666',
+            tooltipBg: style.getPropertyValue('--bg-card').trim() || '#1f1f1f',
+            tooltipTitle: style.getPropertyValue('--text-primary').trim() || '#ffffff',
+            tooltipBody: style.getPropertyValue('--text-secondary').trim() || '#a0a0a0',
+            borderColor: style.getPropertyValue('--border-color').trim() || '#2a2a2a',
+            pointBorder: isLight ? '#ffffff' : '#ffffff'
+        };
+    },
+
+    // Chart.js default configuration (dynamic)
+    getDefaults: () => {
+        const colors = Charts.getThemeColors();
+        return {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    backgroundColor: colors.tooltipBg,
+                    titleColor: colors.tooltipTitle,
+                    bodyColor: colors.tooltipBody,
+                    borderColor: colors.borderColor,
+                    borderWidth: 1,
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: true,
+                    callbacks: {}
+                }
+            }
+        };
+    },
+
+    // Legacy defaults property for compatibility
     defaults: {
         responsive: true,
         maintainAspectRatio: false,
@@ -47,7 +88,8 @@ const Charts = {
         }
 
         const trendData = SalesData.calculate.getMonthlyTrend(Charts.currentMetric, dateRange);
-        const months = SalesData.getMonthsForRange(dateRange);
+        const colors = Charts.getThemeColors();
+        const defaults = Charts.getDefaults();
 
         Charts.instances.salesTrend = new Chart(ctx, {
             type: 'line',
@@ -62,22 +104,22 @@ const Charts = {
                     fill: true,
                     tension: 0.4,
                     pointBackgroundColor: '#e82127',
-                    pointBorderColor: '#ffffff',
+                    pointBorderColor: colors.pointBorder,
                     pointBorderWidth: 2,
                     pointRadius: 4,
                     pointHoverRadius: 6
                 }]
             },
             options: {
-                ...Charts.defaults,
+                ...defaults,
                 scales: {
                     x: {
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
+                            color: colors.gridColor,
                             drawBorder: false
                         },
                         ticks: {
-                            color: '#666666',
+                            color: colors.tickColor,
                             font: {
                                 family: 'Inter',
                                 size: 11
@@ -86,11 +128,11 @@ const Charts = {
                     },
                     y: {
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
+                            color: colors.gridColor,
                             drawBorder: false
                         },
                         ticks: {
-                            color: '#666666',
+                            color: colors.tickColor,
                             font: {
                                 family: 'Inter',
                                 size: 11
@@ -134,6 +176,8 @@ const Charts = {
         }
 
         const modelData = SalesData.calculate.getModelBreakdown(dateRange);
+        const colors = Charts.getThemeColors();
+        const defaults = Charts.getDefaults();
 
         Charts.instances.model = new Chart(ctx, {
             type: 'doughnut',
@@ -142,18 +186,18 @@ const Charts = {
                 datasets: [{
                     data: modelData.map(d => d.units),
                     backgroundColor: modelData.map(d => d.color),
-                    borderColor: '#1f1f1f',
+                    borderColor: colors.tooltipBg,
                     borderWidth: 3,
                     hoverOffset: 8
                 }]
             },
             options: {
-                ...Charts.defaults,
+                ...defaults,
                 cutout: '65%',
                 plugins: {
-                    ...Charts.defaults.plugins,
+                    ...defaults.plugins,
                     tooltip: {
-                        ...Charts.defaults.plugins.tooltip,
+                        ...defaults.plugins.tooltip,
                         callbacks: {
                             label: function(context) {
                                 const data = modelData[context.dataIndex];
@@ -204,6 +248,8 @@ const Charts = {
         }
 
         const regionalData = SalesData.calculate.getRegionalComparison(dateRange);
+        const colors = Charts.getThemeColors();
+        const defaults = Charts.getDefaults();
 
         Charts.instances.regional = new Chart(ctx, {
             type: 'bar',
@@ -223,16 +269,16 @@ const Charts = {
                 }]
             },
             options: {
-                ...Charts.defaults,
+                ...defaults,
                 indexAxis: 'y',
                 scales: {
                     x: {
                         grid: {
-                            color: 'rgba(255, 255, 255, 0.05)',
+                            color: colors.gridColor,
                             drawBorder: false
                         },
                         ticks: {
-                            color: '#666666',
+                            color: colors.tickColor,
                             font: {
                                 family: 'Inter',
                                 size: 11
@@ -247,7 +293,7 @@ const Charts = {
                             display: false
                         },
                         ticks: {
-                            color: '#a0a0a0',
+                            color: colors.tooltipBody,
                             font: {
                                 family: 'Inter',
                                 size: 12,
@@ -257,9 +303,9 @@ const Charts = {
                     }
                 },
                 plugins: {
-                    ...Charts.defaults.plugins,
+                    ...defaults.plugins,
                     tooltip: {
-                        ...Charts.defaults.plugins.tooltip,
+                        ...defaults.plugins.tooltip,
                         callbacks: {
                             label: function(context) {
                                 const data = regionalData[context.dataIndex];
